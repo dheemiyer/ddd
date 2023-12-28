@@ -1,0 +1,93 @@
+import java.util.Random;
+
+public class Hangman {
+  public static final String[] WORDS = {"COMPUTER", "JAVA", "PROGRAMMING", "ALGORITHM", "DESIGN", "ALGORITHMIC", "COMPUTATIONAL", "KEYBOARD", "MOUSE", "SOFTWARE", "SCREEN", "MONITOR", "PROCESSOR", "MEMORY", "STORAGE", "INPUT", "OUTPUT", "PROCESS", "LOOP"};
+  private String secretWord;
+  private StringBuilder currentProgress;
+  private String guessedLetters;
+  private int remainingGuesses;
+
+  public Hangman() {
+    Random random = new Random();
+    secretWord = WORDS[random.nextInt(WORDS.length)];
+    currentProgress = new StringBuilder("*".repeat(secretWord.length()));
+    guessedLetters = "";
+    remainingGuesses = 5;
+  }
+
+  public void makeGuess(String guess) {
+   guess = guess.toUpperCase();
+    if (guess.length() == 1 && Character.isLetter(guess.charAt(0)) && guessedLetters.indexOf(guess) == -1) {
+      guessedLetters += guess + " ";
+
+      if (secretWord.contains(guess)) {
+        updateCurrentProgress(guess);
+      }
+      else {
+        remainingGuesses--;
+      }
+    }
+  }
+
+    private void updateCurrentProgress(String guess) {
+      for (int i = 0; i < secretWord.length(); i++) {
+       if (secretWord.charAt(i) == guess.charAt(0)) {
+         currentProgress.setCharAt(i, guess.charAt(0));
+       }
+      }
+    }
+
+  //i think this should work. guess it doesn't bruh. maybe fix the cases?
+  public String getHangmanGraphic() {
+    switch (remainingGuesses) {
+      case 4: return 
+        " 0 \n" + 
+        "  \n" +
+        "  \n" +
+        "  ";
+      case 3: return 
+        " O \n" +
+          " | \n" +
+          "   \n" +
+          "   ";
+      case 2: return
+        " O \n" +
+          "/| \n" +
+          "   \n" +
+          "   ";
+      case 1: return 
+          " O \n" +
+          "/|\\\n" +
+          "   \n" +
+          "   ";
+      case 0: return 
+          " O \n" +
+          "/|\\\n" +
+          "/ \\\n" +
+          "   ";
+      default: return
+          "   \n" +
+          "   \n" +
+          "   \n" +
+          "   ";
+    }
+  }
+    public boolean isGameOver() {
+      return remainingGuesses <= 0 || currentProgress.toString().equals(secretWord);
+    }
+  public boolean isWin() {
+    return currentProgress.toString().equals(secretWord);
+  }
+  public String getCurrentProgress() {
+    return currentProgress.toString();
+  }
+  public String getGuessedLetters() {
+    return guessedLetters.toString();
+  }
+  public int getRemainingGuesses() {
+    return remainingGuesses;
+  }
+  public String getSecretWord() {
+    return secretWord;
+  }
+}
